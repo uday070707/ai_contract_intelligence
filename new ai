@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Driven Contract & Approval Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FAF7F2;
+  --parchment: #F2EDE3;
+  --warm-white: #FFFDF9;
+  --ink: #1C1410;
+  --ink-soft: #3D2F25;
+  --ink-muted: #7A6558;
+  --ink-faint: #B5A99E;
+  --border: #DDD4C7;
+  --border-soft: #EDE6DC;
+  --rust: #C4512A;
+  --rust-light: #F5E8E1;
+  --gold: #A67C3A;
+  --gold-light: #F5EDDB;
+  --gold-mid: #D4A854;
+  --forest: #2D5C3E;
+  --forest-light: #E3EDE7;
+  --navy: #1E3358;
+  --navy-light: #E2E8F2;
+  --navy-mid: #3D6094;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 48px;
+  background: rgba(250,247,242,0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+.nav-logo span { color: var(--rust); }
+.nav-links { display: flex; gap: 4px; }
+.nav-link {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border: 1px solid transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  background: none;
+  transition: all 0.2s;
+  border-radius: 1px;
+}
+.nav-link:hover { border-color: var(--border); background: var(--parchment); color: var(--ink); }
+
+/* HERO */
+.hero {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 48px 80px;
+  background: var(--warm-white);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.hero-wm {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Playfair Display', serif;
+  font-size: 340px;
+  font-weight: 900;
+  font-style: italic;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(196,81,42,0.055);
+  pointer-events: none;
+  white-space: nowrap;
+  user-select: none;
+  letter-spacing: -0.05em;
+}
+.hero-rule { width: 72px; height: 2px; background: var(--rust); margin: 0 auto 26px; animation: fadeUp 0.7s ease both; }
+.hero-eyebrow {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--rust); margin-bottom: 20px; animation: fadeUp 0.7s 0.08s ease both;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(40px, 6.5vw, 84px);
+  font-weight: 400; line-height: 1.07; letter-spacing: -0.02em;
+  color: var(--ink); margin-bottom: 26px; animation: fadeUp 0.7s 0.14s ease both;
+}
+.hero h1 em { font-style: italic; color: var(--rust); }
+.hero-sub {
+  font-family: 'Crimson Pro', serif;
+  font-size: clamp(17px, 2vw, 22px); font-weight: 300; font-style: italic;
+  color: var(--ink-muted); max-width: 540px; margin: 0 auto 48px; line-height: 1.6;
+  animation: fadeUp 0.7s 0.2s ease both;
+}
+.outcome-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; animation: fadeUp 0.7s 0.26s ease both; }
+.outcome-pill {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 8px 18px; border: 1px solid var(--border); color: var(--ink-soft); background: var(--parchment);
+}
+.scroll-cue {
+  position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--ink-faint);
+}
+.scroll-cue span { font-family: 'Space Grotesk', sans-serif; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; }
+.scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--rust), transparent); animation: sc 2s ease-in-out infinite; }
+@keyframes sc { 0%,100%{opacity:0.3} 50%{opacity:1} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+
+/* MAIN */
+main { position: relative; z-index: 1; max-width: 1160px; margin: 0 auto; padding: 0 48px 120px; }
+
+/* CHAPTER */
+.chapter { padding: 80px 0 0; opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.chapter.visible { opacity: 1; transform: translateY(0); }
+.chapter-top {
+  display: grid; grid-template-columns: 80px 1fr;
+  gap: 24px; align-items: start; margin-bottom: 36px;
+  padding-bottom: 32px; border-bottom: 1px solid var(--border);
+}
+.chapter-num { font-family: 'Playfair Display', serif; font-size: 66px; font-weight: 900; font-style: italic; line-height: 1; padding-top: 4px; }
+.num-rust{color:var(--rust)} .num-gold{color:var(--gold)} .num-forest{color:var(--forest)} .num-navy{color:var(--navy)}
+.chapter-kicker { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
+.kk-rust{color:var(--rust)} .kk-gold{color:var(--gold)} .kk-forest{color:var(--forest)} .kk-navy{color:var(--navy)}
+.chapter-title { font-family: 'Playfair Display', serif; font-size: clamp(24px,3.5vw,38px); font-weight: 700; line-height: 1.12; letter-spacing: -0.015em; color: var(--ink); margin-bottom: 8px; }
+.chapter-ref { font-family: 'Space Grotesk', sans-serif; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.04em; }
+
+/* GRID */
+.cg { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--border); border: 1px solid var(--border); margin-bottom: 2px; }
+.cg.full { grid-template-columns: 1fr; }
+.cell { background: var(--warm-white); padding: 28px 30px; transition: background 0.2s; }
+.cell:hover { background: var(--parchment); }
+.cell-head {
+  font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-muted);
+  margin-bottom: 18px; display: flex; align-items: center; gap: 10px;
+}
+.cr { display: inline-block; width: 24px; height: 2px; flex-shrink: 0; border-radius: 1px; }
+.cr-rust{background:var(--rust)} .cr-gold{background:var(--gold)} .cr-forest{background:var(--forest)} .cr-navy{background:var(--navy)}
+
+/* FEATURE LIST */
+.fl { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.fl li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; font-weight: 300; color: var(--ink-soft); line-height: 1.55; }
+.fl li .mk { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; flex-shrink: 0; margin-top: 2px; opacity: 0.45; }
+.fl li strong { font-weight: 600; color: var(--ink); }
+.sub { list-style: none; padding-left: 18px; margin-top: 4px; display: flex; flex-direction: column; gap: 3px; }
+.sub li { font-size: 13px; color: var(--ink-faint); line-height: 1.5; }
+.sub li::before { content: '— '; color: var(--ink-faint); font-style: italic; }
+
+/* CALLOUT */
+.co { margin-top: 18px; padding: 15px 20px; border-left: 3px solid; background: var(--parchment); border-radius: 0 1px 1px 0; }
+.co-rust{border-color:var(--rust)} .co-gold{border-color:var(--gold)} .co-forest{border-color:var(--forest)} .co-navy{border-color:var(--navy)}
+.co-label { font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 6px; }
+.co-rust .co-label{color:var(--rust)} .co-gold .co-label{color:var(--gold)} .co-forest .co-label{color:var(--forest)} .co-navy .co-label{color:var(--navy)}
+.co p { font-family: 'Crimson Pro', serif; font-size: 15px; font-style: italic; color: var(--ink-soft); line-height: 1.6; }
+.co p strong { font-style: normal; font-weight: 600; color: var(--ink); }
+
+/* STAT STRIP */
+.stat-strip { display: flex; gap: 2px; background: var(--border); border: 1px solid var(--border); margin-bottom: 2px; }
+.stat-block { flex: 1; background: var(--warm-white); padding: 24px 20px; text-align: center; transition: background 0.2s; }
+.stat-block:hover { background: var(--gold-light); }
+.stat-num { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 700; line-height: 1; margin-bottom: 6px; color: var(--gold); }
+.stat-lbl { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 500; color: var(--ink-muted); letter-spacing: 0.05em; line-height: 1.4; }
+
+/* BENEFITS */
+.bm { background: var(--warm-white); border: 1px solid var(--border); padding: 26px 30px; margin-bottom: 2px; }
+.bg { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.bi { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; border: 1px solid var(--border-soft); background: var(--parchment); transition: all 0.2s; cursor: default; }
+.bi:hover { border-color: var(--border); background: var(--cream); }
+.bg-rust .bi:hover { background: var(--rust-light); border-color: rgba(196,81,42,0.25); }
+.bg-gold .bi:hover { background: var(--gold-light); border-color: rgba(166,124,58,0.3); }
+.bg-forest .bi:hover { background: var(--forest-light); border-color: rgba(45,92,62,0.3); }
+.bg-navy .bi:hover { background: var(--navy-light); border-color: rgba(30,51,88,0.3); }
+.bi-g { font-family: 'Playfair Display', serif; font-style: italic; font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.gi-rust{color:var(--rust)} .gi-gold{color:var(--gold)} .gi-forest{color:var(--forest)} .gi-navy{color:var(--navy)}
+.bi-t { font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 400; color: var(--ink-soft); line-height: 1.45; }
+
+/* LIFECYCLE */
+.lc { background: var(--warm-white); border: 1px solid var(--border); padding: 24px 30px; overflow-x: auto; margin-bottom: 2px; }
+.lcs { display: flex; align-items: stretch; min-width: 740px; gap: 0; }
+.lcs-stage { flex: 1; position: relative; text-align: center; }
+.lcs-stage:not(:last-child)::after { content:''; position:absolute; right:-1px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-left:9px solid var(--border); z-index:2; }
+.si { margin: 0 2px; padding: 10px 6px; background: var(--parchment); border: 1px solid var(--border-soft); height: 100%; transition: all 0.2s; }
+.si:hover { background: var(--navy-light); border-color: rgba(61,96,148,0.35); }
+.si-num { font-family: 'Playfair Display', serif; font-style: italic; font-size: 17px; color: var(--navy); display: block; margin-bottom: 4px; }
+.si-lbl { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 500; color: var(--ink-muted); line-height: 1.3; letter-spacing: 0.02em; }
+
+/* SHIFT PANEL */
+.sp { background: var(--warm-white); border: 1px solid var(--border); padding: 30px 32px; display: grid; grid-template-columns: 1fr 44px 1fr; gap: 20px; align-items: center; margin-bottom: 2px; }
+.sb { padding: 20px 22px; border-radius: 1px; }
+.sb-before { background: #FEF2F0; border: 1px solid #F0C0B4; }
+.sb-after { background: var(--forest-light); border: 1px solid #A8CCBA; }
+.sb-lbl { font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 8px; }
+.sb-before .sb-lbl{color:#B84025} .sb-after .sb-lbl{color:var(--forest)}
+.sb-q { font-family: 'Crimson Pro', serif; font-size: 16px; font-style: italic; line-height: 1.55; }
+.sb-before .sb-q{color:#7A3020} .sb-after .sb-q{color:#1F4230} .sb-after .sb-q strong{font-style:normal;font-weight:600}
+.sp-arr { text-align: center; font-family: 'Playfair Display', serif; font-style: italic; font-size: 22px; color: var(--ink-faint); }
+
+/* DIVIDER */
+.cdiv { height: 56px; display: flex; align-items: center; gap: 20px; margin: 8px 0; }
+.cdiv-l { flex: 1; height: 1px; background: var(--border); }
+.cdiv-m { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; color: var(--ink-faint); letter-spacing: 0.1em; }
+
+/* FINALE */
+.finale { padding-top: 80px; opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.finale.visible { opacity: 1; transform: translateY(0); }
+.finale-hd { text-align: center; margin-bottom: 48px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
+.finale-hd .ol { font-family:'Space Grotesk',sans-serif; font-size:10px; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--rust); margin-bottom:16px; }
+.finale-hd h2 { font-family:'Playfair Display',serif; font-size:clamp(28px,4vw,50px); font-weight:400; line-height:1.1; letter-spacing:-0.02em; color:var(--ink); }
+.finale-hd h2 em { font-style:italic; color:var(--rust); }
+.four-p { display:grid; grid-template-columns:repeat(4,1fr); gap:2px; background:var(--border); border:1px solid var(--border); margin-bottom:2px; }
+.pillar { background:var(--warm-white); padding:30px 24px; position:relative; transition:background 0.2s; }
+.pillar:hover { background:var(--parchment); }
+.p-bg { font-family:'Playfair Display',serif; font-size:54px; font-weight:900; font-style:italic; line-height:1; opacity:0.07; position:absolute; top:14px; right:18px; color:var(--ink); }
+.p-acc { width:30px; height:3px; margin-bottom:16px; border-radius:1px; }
+.pa-rust{background:var(--rust)} .pa-gold{background:var(--gold)} .pa-forest{background:var(--forest)} .pa-navy{background:var(--navy)}
+.pillar h3 { font-family:'Playfair Display',serif; font-size:17px; font-weight:700; line-height:1.2; margin-bottom:12px; color:var(--ink); }
+.pillar p { font-family:'Crimson Pro',serif; font-size:15px; font-weight:300; color:var(--ink-muted); line-height:1.6; }
+
+/* BANNER */
+.formula-banner { background:var(--ink); padding:56px 48px; text-align:center; border:1px solid var(--border); }
+.fb-sub { font-family:'Crimson Pro',serif; font-size:clamp(16px,2vw,20px); font-style:italic; color:rgba(255,255,255,0.45); margin-bottom:32px; line-height:1.55; }
+.fr { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:12px; }
+.ft { font-family:'Space Grotesk',sans-serif; font-size:clamp(10px,1.2vw,12px); font-weight:500; letter-spacing:0.1em; text-transform:uppercase; padding:10px 22px; }
+.ft-rust{background:rgba(196,81,42,0.14);color:#F0946E;border:1px solid rgba(196,81,42,0.28)}
+.ft-gold{background:rgba(166,124,58,0.14);color:#D4A854;border:1px solid rgba(166,124,58,0.28)}
+.ft-forest{background:rgba(45,92,62,0.14);color:#70C291;border:1px solid rgba(45,92,62,0.28)}
+.ft-navy{background:rgba(30,51,88,0.22);color:#80A0CC;border:1px solid rgba(61,96,148,0.38)}
+.ft-res{background:rgba(255,255,255,0.07);color:#FFFDF9;border:1px solid rgba(255,255,255,0.18);font-size:clamp(11px,1.3vw,13px);font-weight:600}
+.fs { font-family:'Playfair Display',serif; font-style:italic; font-size:22px; color:rgba(255,255,255,0.18); }
+
+footer { position:relative; z-index:1; background:var(--warm-white); border-top:1px solid var(--border); padding:28px 48px; }
+.fi { display:flex; align-items:center; justify-content:space-between; max-width:1160px; margin:0 auto; }
+.f-logo { font-family:'Playfair Display',serif; font-size:12px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-faint); }
+.f-note { font-family:'Crimson Pro',serif; font-size:13px; font-style:italic; color:var(--ink-faint); }
+
+@media(max-width:900px){
+  .four-p{grid-template-columns:1fr 1fr}
+  .cg{grid-template-columns:1fr}
+  .sp{grid-template-columns:1fr;grid-template-rows:auto auto auto}
+  .sp-arr{transform:rotate(90deg)}
+  nav{padding:14px 20px}
+  .nav-links{display:none}
+  main{padding:0 20px 80px}
+  .hero{padding:100px 24px 70px}
+  .formula-banner{padding:36px 20px}
+  footer{padding:24px}
+  .fi{flex-direction:column;gap:8px;text-align:center}
+  .chapter-top{grid-template-columns:56px 1fr;gap:16px}
+  .chapter-num{font-size:48px}
+}
+@media(max-width:600px){
+  .four-p{grid-template-columns:1fr}
+  .hero h1{font-size:36px}
+}
+
+/* ── MEASURABLE METRICS ── */
+.metrics-section {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  padding: 32px 30px;
+  margin-bottom: 2px;
+}
+.metrics-section .cell-head { margin-bottom: 24px; }
+
+/* KPI BAR ROWS */
+.kpi-grid { display: flex; flex-direction: column; gap: 14px; }
+.kpi-row { display: grid; grid-template-columns: 200px 1fr 72px; gap: 14px; align-items: center; }
+.kpi-label { font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 500; color: var(--ink-soft); letter-spacing: 0.03em; }
+.kpi-track { height: 6px; background: var(--parchment); border: 1px solid var(--border-soft); border-radius: 1px; overflow: hidden; }
+.kpi-fill { height: 100%; border-radius: 1px; width: 0; transition: width 1.4s cubic-bezier(0.4,0,0.2,1); }
+.kpi-val { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; text-align: right; }
+
+.fill-rust { background: var(--rust); }
+.fill-gold { background: var(--gold); }
+.fill-forest { background: var(--forest); }
+.fill-navy { background: var(--navy); }
+.val-rust { color: var(--rust); }
+.val-gold { color: var(--gold); }
+.val-forest { color: var(--forest); }
+.val-navy { color: var(--navy); }
+
+/* COUNTER CARDS */
+.counter-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 2px;
+}
+.counter-card {
+  background: var(--warm-white);
+  padding: 24px 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s;
+}
+.counter-card:hover { background: var(--parchment); }
+.counter-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+}
+.cc-rust::after { background: var(--rust); }
+.cc-gold::after { background: var(--gold); }
+.cc-forest::after { background: var(--forest); }
+.cc-navy::after { background: var(--navy); }
+.cc-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.cc-rust .cc-num { color: var(--rust); }
+.cc-gold .cc-num { color: var(--gold); }
+.cc-forest .cc-num { color: var(--forest); }
+.cc-navy .cc-num { color: var(--navy); }
+.cc-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-muted); line-height: 1.4;
+}
+.cc-sub {
+  font-family: 'Crimson Pro', serif;
+  font-size: 12px; font-style: italic;
+  color: var(--ink-faint); margin-top: 4px; line-height: 1.4;
+}
+
+/* MASTER METRICS DASHBOARD */
+.master-metrics {
+  background: var(--warm-white);
+  border: 1px solid var(--border);
+  margin-bottom: 2px;
+  padding: 36px 32px;
+}
+.mm-header {
+  display: flex; align-items: baseline; gap: 16px;
+  margin-bottom: 28px; padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.mm-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700; color: var(--ink);
+}
+.mm-sub {
+  font-family: 'Crimson Pro', serif;
+  font-size: 14px; font-style: italic; color: var(--ink-faint);
+}
+.mm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.mm-card {
+  padding: 20px;
+  border: 1px solid var(--border-soft);
+  background: var(--parchment);
+  position: relative;
+  transition: all 0.2s;
+}
+.mm-card:hover { background: var(--cream); border-color: var(--border); }
+.mm-card-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 10px;
+}
+.mm-card-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-muted); line-height: 1.4; max-width: 140px;
+}
+.mm-badge {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 9px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 1px;
+}
+.mb-rust { background: var(--rust-light); color: var(--rust); }
+.mb-gold { background: var(--gold-light); color: var(--gold); }
+.mb-forest { background: var(--forest-light); color: var(--forest); }
+.mb-navy { background: var(--navy-light); color: var(--navy); }
+
+.mm-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 4px;
+}
+.mn-rust{color:var(--rust)} .mn-gold{color:var(--gold)} .mn-forest{color:var(--forest)} .mn-navy{color:var(--navy)}
+
+.mm-desc {
+  font-family: 'Crimson Pro', serif;
+  font-size: 13px; font-style: italic; color: var(--ink-faint); line-height: 1.5;
+}
+.mm-track {
+  margin-top: 12px; height: 4px;
+  background: var(--border-soft); border-radius: 1px; overflow: hidden;
+}
+.mm-fill { height: 100%; border-radius: 1px; width: 0; transition: width 1.6s cubic-bezier(0.4,0,0.2,1); }
+
+@media(max-width:768px){
+  .kpi-row { grid-template-columns: 1fr; gap: 6px; }
+  .kpi-val { text-align: left; }
+  .metrics-section { padding: 24px 20px; }
+  .master-metrics { padding: 24px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Contract <span>AI</span> Intelligence</div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="jmp('#c1')">Risk Analysis</button>
+    <button class="nav-link" onclick="jmp('#c2')">Summarization</button>
+    <button class="nav-link" onclick="jmp('#c3')">Dashboard</button>
+    <button class="nav-link" onclick="jmp('#c4')">Predictive</button>
+    <button class="nav-link" onclick="jmp('#metrics')">Metrics</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-wm">AI</div>
+  <div class="hero-rule"></div>
+  <div class="hero-eyebrow">Deck Analysis — Business Intelligence Report</div>
+  <h1>AI-Driven Contract<br><em>&amp; Approval Intelligence</em></h1>
+  <p class="hero-sub">Transforming manual contract review into a faster,<br>smarter, and more predictive management system.</p>
+  <div class="outcome-row">
+    <span class="outcome-pill">Efficiency</span>
+    <span class="outcome-pill">Compliance</span>
+    <span class="outcome-pill">Strategic Intelligence</span>
+    <span class="outcome-pill">Reduced Manual Effort</span>
+  </div>
+  <div class="scroll-cue"><span>Explore</span><div class="scroll-line"></div></div>
+</section>
+
+<main>
+
+<!-- ═══ CHAPTER 1 ═══ -->
+<article class="chapter" id="c1">
+  <div class="chapter-top">
+    <div class="chapter-num num-rust">i</div>
+    <div>
+      <div class="chapter-kicker kk-rust">Use Case 01</div>
+      <h2 class="chapter-title">AI Risk Analysis &amp; Clause Detection</h2>
+      <div class="chapter-ref">Deck Reference — Page 5: AI-Based Risk Analysis in Contracts</div>
+    </div>
+  </div>
+
+  <div class="cg">
+    <div class="cell">
+      <div class="cell-head"><span class="cr cr-rust"></span>Automatic Clause Detection</div>
+      <ul class="fl">
+        <li><span class="mk">—</span><span><strong>High-risk clause scanning</strong><ul class="sub"><li>Liability exposure</li><li>Penalty clauses</li><li>Termination risks</li></ul></span></li>
+        <li><span class="mk">—</span><span><strong>Missing clause identification</strong><ul class="sub"><li>Termination clause</li><li>Compliance clause</li><li>Legal protection clauses</li></ul></span></li>
+        <li><span class="mk">—</span><span>Full document scanned <strong>within seconds</strong> of upload</span></li>
+      </ul>
+    </div>
+    <div class="cell">
+      <div class="cell-head"><span class="cr cr-rust"></span>Smart Comparison &amp; Action</div>
+      <ul class="fl">
+        <li><span class="mk">—</span><span>Compares against <strong>approved templates</strong>, internal policies, and historical contracts</span></li>
+        <li><span class="mk">—</span><span><strong>Recommends</strong> optimized standard clauses automatically</span></li>
+        <li><span class="mk">—</span><span>Highlights flagged clauses for <strong>immediate review</strong></span></li>
+        <li><span class="mk">—</span><span><strong>Quick action options:</strong><ul class="sub"><li>Accept clause</li><li>Modify clause</li><li>Reject clause</li></ul></span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bm">
+    <div class="cell-head" style="margin-bottom:16px"><span class="cr cr-rust"></span>Business Benefits</div>
+    <div class="bg bg-rust">
+      <div class="bi"><span class="bi-g gi-rust">i.</span><span class="bi-t">Reduced legal &amp; compliance risk exposure</span></div>
+      <div class="bi"><span class="bi-g gi-rust">ii.</span><span class="bi-t">Faster contract validation cycles</span></div>
+      <div class="bi"><span class="bi-g gi-rust">iii.</span><span class="bi-t">Improved review accuracy &amp; consistency</span></div>
+      <div class="bi"><span class="bi-g gi-rust">iv.</span><span class="bi-t">Lower dependency on manual legal review</span></div>
+      <div class="bi"><span class="bi-g gi-rust">v.</span><span class="bi-t">Faster stakeholder approvals</span></div>
+      <div class="bi"><span class="bi-g gi-rust">vi.</span><span class="bi-t">Reduced financial liability from hidden clauses</span></div>
+    </div>
+  </div>
+
+  <!-- MEASURABLE: UC1 -->
+  <div class="counter-row">
+    <div class="counter-card cc-rust">
+      <div class="cc-num" data-target="70" data-suffix="%">0%</div>
+      <div class="cc-label">Reduction in Missed Risk Clauses</div>
+      <div class="cc-sub">vs. manual review baseline</div>
+    </div>
+    <div class="counter-card cc-rust">
+      <div class="cc-num" data-target="5" data-suffix="s">0s</div>
+      <div class="cc-label">Avg. Full Contract Scan Time</div>
+      <div class="cc-sub">from upload to risk report</div>
+    </div>
+    <div class="counter-card cc-rust">
+      <div class="cc-num" data-target="85" data-suffix="%">0%</div>
+      <div class="cc-label">Clause Accuracy Rate</div>
+      <div class="cc-sub">AI vs. expert legal review</div>
+    </div>
+    <div class="counter-card cc-rust">
+      <div class="cc-num" data-target="50" data-suffix="%">0%</div>
+      <div class="cc-label">Faster Legal Validation</div>
+      <div class="cc-sub">cycle time reduction</div>
+    </div>
+    <div class="counter-card cc-rust">
+      <div class="cc-num" data-target="90" data-suffix="%">0%</div>
+      <div class="cc-label">High-Risk Clause Detection</div>
+      <div class="cc-sub">liability, penalty, termination</div>
+    </div>
+  </div>
+
+  <div class="metrics-section">
+    <div class="cell-head"><span class="cr cr-rust"></span>KPI Performance Targets — Risk Analysis</div>
+    <div class="kpi-grid">
+      <div class="kpi-row">
+        <div class="kpi-label">Risk clause detection rate</div>
+        <div class="kpi-track"><div class="kpi-fill fill-rust" data-width="90"></div></div>
+        <div class="kpi-val val-rust">90%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Contract scan speed improvement</div>
+        <div class="kpi-track"><div class="kpi-fill fill-rust" data-width="95"></div></div>
+        <div class="kpi-val val-rust">95%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Manual legal review reduction</div>
+        <div class="kpi-track"><div class="kpi-fill fill-rust" data-width="65"></div></div>
+        <div class="kpi-val val-rust">65%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Template compliance score</div>
+        <div class="kpi-track"><div class="kpi-fill fill-rust" data-width="88"></div></div>
+        <div class="kpi-val val-rust">88%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Financial liability exposure reduced</div>
+        <div class="kpi-track"><div class="kpi-fill fill-rust" data-width="70"></div></div>
+        <div class="kpi-val val-rust">70%</div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<div class="cdiv"><div class="cdiv-l"></div><div class="cdiv-m">§</div><div class="cdiv-l"></div></div>
+
+<!-- ═══ CHAPTER 2 ═══ -->
+<article class="chapter" id="c2">
+  <div class="chapter-top">
+    <div class="chapter-num num-gold">ii</div>
+    <div>
+      <div class="chapter-kicker kk-gold">Use Case 02</div>
+      <h2 class="chapter-title">AI-Powered Document Summarization</h2>
+      <div class="chapter-ref">Deck Reference — Page 6: AI-Powered Contract Summarization</div>
+    </div>
+  </div>
+
+  <div class="stat-strip">
+    <div class="stat-block"><div class="stat-num">40%</div><div class="stat-lbl">Faster Approvals</div></div>
+    <div class="stat-block"><div class="stat-num">60%</div><div class="stat-lbl">Less Manual Review</div></div>
+    <div class="stat-block"><div class="stat-num">3×</div><div class="stat-lbl">More Independent Reviewers</div></div>
+  </div>
+
+  <div class="cg">
+    <div class="cell">
+      <div class="cell-head"><span class="cr cr-gold"></span>Key Information Extracted</div>
+      <ul class="fl">
+        <li><span class="mk">—</span><span><strong>Obligations</strong> extracted and categorised</span></li>
+        <li><span class="mk">—</span><span><strong>Payment terms</strong> — amounts, schedules, penalties</span></li>
+        <li><span class="mk">—</span><span><strong>Deadlines</strong> &amp; milestone dates</span></li>
+        <li><span class="mk">—</span><span><strong>Duration</strong> &amp; renewal terms</span></li>
+        <li><span class="mk">—</span><span><strong>Penalty clauses</strong> surfaced clearly</span></li>
+      </ul>
+      <div class="co co-gold"><div class="co-label">Example Output</div><p><strong>"Payment within 30 days, penalty 5%, duration 2 years"</strong></p></div>
+    </div>
+    <div class="cell">
+      <div class="cell-head"><span class="cr cr-gold"></span>Plain Language &amp; Collaboration</div>
+      <ul class="fl">
+        <li><span class="mk">—</span><span>Converts <strong>legal language → plain business language</strong></span></li>
+        <li><span class="mk">—</span><span>Side-by-side view: full contract + AI-generated summary</span></li>
+        <li><span class="mk">—</span><span>Finance, procurement &amp; operations can <strong>review independently</strong></span></li>
+        <li><span class="mk">—</span><span>Accelerates cross-department decision-making</span></li>
+        <li><span class="mk">—</span><span>Reduces legal team dependency for basic review</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bm">
+    <div class="cell-head" style="margin-bottom:16px"><span class="cr cr-gold"></span>Business Benefits</div>
+    <div class="bg bg-gold">
+      <div class="bi"><span class="bi-g gi-gold">i.</span><span class="bi-t">40% faster approvals across teams</span></div>
+      <div class="bi"><span class="bi-g gi-gold">ii.</span><span class="bi-t">60% less manual review effort required</span></div>
+      <div class="bi"><span class="bi-g gi-gold">iii.</span><span class="bi-t">3× wider independent stakeholder access</span></div>
+      <div class="bi"><span class="bi-g gi-gold">iv.</span><span class="bi-t">Reduced legal team dependency</span></div>
+      <div class="bi"><span class="bi-g gi-gold">v.</span><span class="bi-t">Improved cross-department collaboration</span></div>
+      <div class="bi"><span class="bi-g gi-gold">vi.</span><span class="bi-t">Faster, better-informed decision-making</span></div>
+    </div>
+  </div>
+
+  <!-- MEASURABLE: UC2 -->
+  <div class="counter-row">
+    <div class="counter-card cc-gold">
+      <div class="cc-num" data-target="40" data-suffix="%">0%</div>
+      <div class="cc-label">Faster Approvals</div>
+      <div class="cc-sub">end-to-end cycle time</div>
+    </div>
+    <div class="counter-card cc-gold">
+      <div class="cc-num" data-target="60" data-suffix="%">0%</div>
+      <div class="cc-label">Less Manual Review</div>
+      <div class="cc-sub">effort hours saved</div>
+    </div>
+    <div class="counter-card cc-gold">
+      <div class="cc-num" data-target="3" data-suffix="×">0×</div>
+      <div class="cc-label">More Reviewers</div>
+      <div class="cc-sub">non-legal stakeholders</div>
+    </div>
+    <div class="counter-card cc-gold">
+      <div class="cc-num" data-target="2" data-suffix=" min">0 min</div>
+      <div class="cc-label">Avg. Summary Generation</div>
+      <div class="cc-sub">per 100-page contract</div>
+    </div>
+    <div class="counter-card cc-gold">
+      <div class="cc-num" data-target="80" data-suffix="%">0%</div>
+      <div class="cc-label">Stakeholder Comprehension</div>
+      <div class="cc-sub">non-legal team accuracy</div>
+    </div>
+  </div>
+
+  <div class="metrics-section">
+    <div class="cell-head"><span class="cr cr-gold"></span>KPI Performance Targets — Summarization</div>
+    <div class="kpi-grid">
+      <div class="kpi-row">
+        <div class="kpi-label">Approval cycle time reduction</div>
+        <div class="kpi-track"><div class="kpi-fill fill-gold" data-width="40"></div></div>
+        <div class="kpi-val val-gold">40%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Manual review effort reduction</div>
+        <div class="kpi-track"><div class="kpi-fill fill-gold" data-width="60"></div></div>
+        <div class="kpi-val val-gold">60%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Non-legal reviewer participation</div>
+        <div class="kpi-track"><div class="kpi-fill fill-gold" data-width="75"></div></div>
+        <div class="kpi-val val-gold">3× increase</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Legal translation accuracy</div>
+        <div class="kpi-track"><div class="kpi-fill fill-gold" data-width="92"></div></div>
+        <div class="kpi-val val-gold">92%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Cross-dept collaboration score</div>
+        <div class="kpi-track"><div class="kpi-fill fill-gold" data-width="78"></div></div>
+        <div class="kpi-val val-gold">78%</div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<div class="cdiv"><div class="cdiv-l"></div><div class="cdiv-m">§</div><div class="cdiv-l"></div></div>
+
+<!-- ═══ CHAPTER 3 ═══ -->
+<article class="chapter" id="c3">
+  <div class="chapter-top">
+    <div class="chapter-num num-forest">iii</div>
+    <div>
+      <div class="chapter-kicker kk-forest">Use Case 03</div>
+      <h2 class="chapter-title">AI Data-Driven Dynamic Dashboard</h2>
+      <div class="chapter-ref">Deck Reference — Page 7: AI-Driven Dashboard &amp; Data-Based Insights</div>
+    </div>
+  </div>
+
+  <div class="cg">
+    <div class="cell">
+      <div class="cell-head"><span class="cr cr-forest"></span>Smart Filter Inputs</div>
+      <ul class="fl">
+        <li><span class="mk">—</span><span><strong>High Risk</strong> contracts flagged</span></li>
+        <li><span class="mk">—</span><span><strong>Pending Approval</strong> queue visibility</span></li>
+        <li><span class="mk">—</span><span><strong>Vendor Type</strong> segmentation</span></li>
+        <li><span class="mk">—</span><span><strong>Contract Value</strong> range filtering</span></li>
+        <li><span class="mk">—</span><span><strong>Approval Delays</strong> detection</span></li>
+        <li><span class="mk">—</span><span><strong>SLA Breaches</strong> real-time monitoring</span></li>
+      </ul>
+      <div class="co co-forest"><div class="co-label">Personalization Example</div><p>Manager filters <strong>"High Risk + Pending Approval"</strong> — AI asks: <em>"Save this as a bookmark?"</em> Next login automatically loads the same optimized view.</p></div>
+    </div>
+    <div class="cell">
+      <div class="cell-head"><span class="cr cr-forest"></span>AI-Powered Capabilities</div>
+      <ul class="fl">
+        <li><span class="mk">—</span><span><strong>Real-time KPI insights</strong> auto-generated per role</span></li>
+        <li><span class="mk">—</span><span><strong>Predictive analytics</strong> across the contract lifecycle</span></li>
+        <li><span class="mk">—</span><span><strong>Role-based dashboard views</strong> for each user type</span></li>
+        <li><span class="mk">—</span><span><strong>Smart recommendations</strong> surfaced proactively</span></li>
+        <li><span class="mk">—</span><span><strong>Trend forecasting</strong> for renewals &amp; risks</span></li>
+        <li><span class="mk">—</span><span><strong>Personalized saved views</strong> &amp; bookmarks retained</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bm">
+    <div class="cell-head" style="margin-bottom:16px"><span class="cr cr-forest"></span>Business Benefits</div>
+    <div class="bg bg-forest">
+      <div class="bi"><span class="bi-g gi-forest">i.</span><span class="bi-t">Enhanced visibility across all contracts</span></div>
+      <div class="bi"><span class="bi-g gi-forest">ii.</span><span class="bi-t">Real-time decision-making support</span></div>
+      <div class="bi"><span class="bi-g gi-forest">iii.</span><span class="bi-t">Personalized user experience by role</span></div>
+      <div class="bi"><span class="bi-g gi-forest">iv.</span><span class="bi-t">Faster operational insights for executives</span></div>
+      <div class="bi"><span class="bi-g gi-forest">v.</span><span class="bi-t">Predictive issue detection before escalation</span></div>
+      <div class="bi"><span class="bi-g gi-forest">vi.</span><span class="bi-t">Reduced manual dashboard creation effort</span></div>
+      <div class="bi"><span class="bi-g gi-forest">vii.</span><span class="bi-t">Better executive reporting &amp; visibility</span></div>
+      <div class="bi"><span class="bi-g gi-forest">viii.</span><span class="bi-t">Smarter decisions via AI-generated summaries</span></div>
+    </div>
+  </div>
+
+  <!-- MEASURABLE: UC3 -->
+  <div class="counter-row">
+    <div class="counter-card cc-forest">
+      <div class="cc-num" data-target="100" data-suffix="%">0%</div>
+      <div class="cc-label">Real-Time Contract Visibility</div>
+      <div class="cc-sub">live portfolio coverage</div>
+    </div>
+    <div class="counter-card cc-forest">
+      <div class="cc-num" data-target="75" data-suffix="%">0%</div>
+      <div class="cc-label">Faster Insight Generation</div>
+      <div class="cc-sub">vs. manual reporting</div>
+    </div>
+    <div class="counter-card cc-forest">
+      <div class="cc-num" data-target="5" data-suffix="×">0×</div>
+      <div class="cc-label">Dashboard Efficiency</div>
+      <div class="cc-sub">vs. static spreadsheet views</div>
+    </div>
+    <div class="counter-card cc-forest">
+      <div class="cc-num" data-target="30" data-suffix="%">0%</div>
+      <div class="cc-label">Fewer SLA Breaches</div>
+      <div class="cc-sub">via predictive alerts</div>
+    </div>
+    <div class="counter-card cc-forest">
+      <div class="cc-num" data-target="95" data-suffix="%">0%</div>
+      <div class="cc-label">User Personalization Coverage</div>
+      <div class="cc-sub">role-based saved views</div>
+    </div>
+  </div>
+
+  <div class="metrics-section">
+    <div class="cell-head"><span class="cr cr-forest"></span>KPI Performance Targets — Dynamic Dashboard</div>
+    <div class="kpi-grid">
+      <div class="kpi-row">
+        <div class="kpi-label">Real-time portfolio visibility</div>
+        <div class="kpi-track"><div class="kpi-fill fill-forest" data-width="100"></div></div>
+        <div class="kpi-val val-forest">100%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Dashboard generation time saved</div>
+        <div class="kpi-track"><div class="kpi-fill fill-forest" data-width="75"></div></div>
+        <div class="kpi-val val-forest">75%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">SLA breach prevention rate</div>
+        <div class="kpi-track"><div class="kpi-fill fill-forest" data-width="30"></div></div>
+        <div class="kpi-val val-forest">30%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Executive report accuracy</div>
+        <div class="kpi-track"><div class="kpi-fill fill-forest" data-width="96"></div></div>
+        <div class="kpi-val val-forest">96%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Predictive issue detection lead time</div>
+        <div class="kpi-track"><div class="kpi-fill fill-forest" data-width="82"></div></div>
+        <div class="kpi-val val-forest">82%</div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<div class="cdiv"><div class="cdiv-l"></div><div class="cdiv-m">§</div><div class="cdiv-l"></div></div>
+
+<!-- ═══ CHAPTER 4 ═══ -->
+<article class="chapter" id="c4">
+  <div class="chapter-top">
+    <div class="chapter-num num-navy">iv</div>
+    <div>
+      <div class="chapter-kicker kk-navy">Use Case 04</div>
+      <h2 class="chapter-title">AI Predictive Analysis &amp; Approval Management</h2>
+      <div class="chapter-ref">Deck Reference — Page 8: AI-Based Tracking Metrics &amp; Workflow Analysis</div>
+    </div>
+  </div>
+
+  <div class="lc">
+    <div class="cell-head" style="margin-bottom:20px"><span class="cr cr-navy"></span>Full Contract Lifecycle Monitored</div>
+    <div class="lcs">
+      <div class="lcs-stage"><div class="si"><span class="si-num">I</span><div class="si-lbl">Draft Created</div></div></div>
+      <div class="lcs-stage"><div class="si"><span class="si-num">II</span><div class="si-lbl">Legal Review</div></div></div>
+      <div class="lcs-stage"><div class="si"><span class="si-num">III</span><div class="si-lbl">Finance Approval</div></div></div>
+      <div class="lcs-stage"><div class="si"><span class="si-num">IV</span><div class="si-lbl">Procurement Validation</div></div></div>
+      <div class="lcs-stage"><div class="si"><span class="si-num">V</span><div class="si-lbl">Management Approval</div></div></div>
+      <div class="lcs-stage"><div class="si"><span class="si-num">VI</span><div class="si-lbl">Final Sign-Off</div></div></div>
+      <div class="lcs-stage"><div class="si"><span class="si-num">VII</span><div class="si-lbl">Execution</div></div></div>
+      <div class="lcs-stage"><div class="si"><span class="si-num">VIII</span><div class="si-lbl">Renewal / Expiry</div></div></div>
+    </div>
+  </div>
+
+  <div class="cg">
+    <div class="cell">
+      <div class="cell-head"><span class="cr cr-navy"></span>Track Status &amp; Measure Cycles</div>
+      <ul class="fl">
+        <li><span class="mk">—</span><span>Real-time visibility: <strong>Approved / Rejected / In Progress / Pending / Escalated / Delayed</strong></span></li>
+        <li><span class="mk">—</span><span>Full <strong>lifecycle history</strong> per contract</span></li>
+        <li><span class="mk">—</span><span>AI measures <strong>time spent</strong> in each approval stage</span></li>
+        <li><span class="mk">—</span><span><strong>Benchmark comparison</strong> against completion norms</span></li>
+      </ul>
+    </div>
+    <div class="cell">
+      <div class="cell-head"><span class="cr cr-navy"></span>Detect Bottlenecks &amp; Predict</div>
+      <ul class="fl">
+        <li><span class="mk">—</span><span>Flags <strong>slow approvers</strong> &amp; repeated rejection loops</span></li>
+        <li><span class="mk">—</span><span>Detects <strong>stuck stages</strong> &amp; inter-dept dependencies</span></li>
+        <li><span class="mk">—</span><span>Recommends <strong>parallel approval routing</strong> proactively</span></li>
+        <li><span class="mk">—</span><span><strong>SLA-based alerts</strong> before breach occurs</span></li>
+      </ul>
+      <div class="co co-navy"><div class="co-label">Predictive Example</div><p>Finance approvals running <strong>5 days longer than average</strong> — AI predicts delays, recommends parallel routing, estimates <strong>30% cycle time reduction</strong>.</p></div>
+    </div>
+  </div>
+
+  <div class="sp">
+    <div class="sb sb-before"><div class="sb-lbl">Before — Reactive Handling</div><p class="sb-q">"Why is this contract delayed?"</p></div>
+    <div class="sp-arr">→</div>
+    <div class="sb sb-after"><div class="sb-lbl">After — AI Proactive Intelligence</div><p class="sb-q"><strong>"This contract is likely to be delayed in Finance Approval within 2 days unless escalation is triggered now."</strong></p></div>
+  </div>
+
+  <div class="bm">
+    <div class="cell-head" style="margin-bottom:16px"><span class="cr cr-navy"></span>Operational &amp; Strategic Benefits</div>
+    <div class="bg bg-navy">
+      <div class="bi"><span class="bi-g gi-navy">i.</span><span class="bi-t">Reduced approval turnaround time</span></div>
+      <div class="bi"><span class="bi-g gi-navy">ii.</span><span class="bi-t">Improved SLA adherence across departments</span></div>
+      <div class="bi"><span class="bi-g gi-navy">iii.</span><span class="bi-t">Faster contract execution with fewer delays</span></div>
+      <div class="bi"><span class="bi-g gi-navy">iv.</span><span class="bi-t">Reduced manual follow-up overhead</span></div>
+      <div class="bi"><span class="bi-g gi-navy">v.</span><span class="bi-t">Predictive vs reactive decision-making</span></div>
+      <div class="bi"><span class="bi-g gi-navy">vi.</span><span class="bi-t">Better stakeholder accountability</span></div>
+      <div class="bi"><span class="bi-g gi-navy">vii.</span><span class="bi-t">Continuous workflow optimisation via LLM</span></div>
+      <div class="bi"><span class="bi-g gi-navy">viii.</span><span class="bi-t">Stronger governance &amp; audit readiness</span></div>
+    </div>
+  </div>
+
+  <!-- MEASURABLE: UC4 -->
+  <div class="counter-row">
+    <div class="counter-card cc-navy">
+      <div class="cc-num" data-target="30" data-suffix="%">0%</div>
+      <div class="cc-label">Cycle Time Reduction</div>
+      <div class="cc-sub">approval workflow speed</div>
+    </div>
+    <div class="counter-card cc-navy">
+      <div class="cc-num" data-target="2" data-suffix=" days">0 days</div>
+      <div class="cc-label">Delay Prediction Lead Time</div>
+      <div class="cc-sub">proactive escalation window</div>
+    </div>
+    <div class="counter-card cc-navy">
+      <div class="cc-num" data-target="45" data-suffix="%">0%</div>
+      <div class="cc-label">Fewer Missed Deadlines</div>
+      <div class="cc-sub">SLA adherence improvement</div>
+    </div>
+    <div class="counter-card cc-navy">
+      <div class="cc-num" data-target="60" data-suffix="%">0%</div>
+      <div class="cc-label">Manual Follow-Up Reduced</div>
+      <div class="cc-sub">auto-escalation coverage</div>
+    </div>
+    <div class="counter-card cc-navy">
+      <div class="cc-num" data-target="99" data-suffix="%">0%</div>
+      <div class="cc-label">Audit Trail Completeness</div>
+      <div class="cc-sub">every stage captured</div>
+    </div>
+  </div>
+
+  <div class="metrics-section">
+    <div class="cell-head"><span class="cr cr-navy"></span>KPI Performance Targets — Predictive Workflow</div>
+    <div class="kpi-grid">
+      <div class="kpi-row">
+        <div class="kpi-label">Approval cycle time reduction</div>
+        <div class="kpi-track"><div class="kpi-fill fill-navy" data-width="30"></div></div>
+        <div class="kpi-val val-navy">30%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Bottleneck detection accuracy</div>
+        <div class="kpi-track"><div class="kpi-fill fill-navy" data-width="87"></div></div>
+        <div class="kpi-val val-navy">87%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">SLA breach prevention rate</div>
+        <div class="kpi-track"><div class="kpi-fill fill-navy" data-width="45"></div></div>
+        <div class="kpi-val val-navy">45%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Manual follow-up elimination</div>
+        <div class="kpi-track"><div class="kpi-fill fill-navy" data-width="60"></div></div>
+        <div class="kpi-val val-navy">60%</div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-label">Governance &amp; audit readiness score</div>
+        <div class="kpi-track"><div class="kpi-fill fill-navy" data-width="99"></div></div>
+        <div class="kpi-val val-navy">99%</div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<div class="cdiv" style="margin-top:40px"><div class="cdiv-l"></div><div class="cdiv-m">✦</div><div class="cdiv-l"></div></div>
+
+<!-- MASTER METRICS DASHBOARD -->
+<section class="chapter visible" id="metrics" style="padding-top:40px">
+  <div class="chapter-top">
+    <div class="chapter-num" style="color:var(--ink-muted);font-size:48px">∑</div>
+    <div>
+      <div class="chapter-kicker" style="color:var(--ink-muted)">Consolidated View</div>
+      <h2 class="chapter-title">Measurable Business Outcomes — All 4 Use Cases</h2>
+      <div class="chapter-ref">Quantifiable ROI metrics across the full AI Contract Intelligence ecosystem</div>
+    </div>
+  </div>
+
+  <div class="master-metrics">
+    <div class="mm-header">
+      <div class="mm-title">Enterprise-Level KPIs</div>
+      <div class="mm-sub">Targets achievable within 6–12 months of deployment</div>
+    </div>
+    <div class="mm-grid">
+      <div class="mm-card">
+        <div class="mm-card-top">
+          <div class="mm-card-label">Contract Review Speed</div>
+          <div class="mm-badge mb-rust">Risk AI</div>
+        </div>
+        <div class="mm-num mn-rust" data-target="70" data-suffix="%">0%</div>
+        <div class="mm-desc">faster end-to-end contract review vs. manual process</div>
+        <div class="mm-track"><div class="mm-fill fill-rust" data-width="70"></div></div>
+      </div>
+      <div class="mm-card">
+        <div class="mm-card-top">
+          <div class="mm-card-label">Approval Cycle Reduction</div>
+          <div class="mm-badge mb-gold">Summarization</div>
+        </div>
+        <div class="mm-num mn-gold" data-target="40" data-suffix="%">0%</div>
+        <div class="mm-desc">reduction in approval turnaround time across departments</div>
+        <div class="mm-track"><div class="mm-fill fill-gold" data-width="40"></div></div>
+      </div>
+      <div class="mm-card">
+        <div class="mm-card-top">
+          <div class="mm-card-label">Manual Effort Saved</div>
+          <div class="mm-badge mb-gold">Summarization</div>
+        </div>
+        <div class="mm-num mn-gold" data-target="60" data-suffix="%">0%</div>
+        <div class="mm-desc">reduction in hours spent on manual contract review</div>
+        <div class="mm-track"><div class="mm-fill fill-gold" data-width="60"></div></div>
+      </div>
+      <div class="mm-card">
+        <div class="mm-card-top">
+          <div class="mm-card-label">Stakeholder Access</div>
+          <div class="mm-badge mb-gold">Summarization</div>
+        </div>
+        <div class="mm-num mn-gold" data-target="3" data-suffix="×">0×</div>
+        <div class="mm-desc">more non-legal stakeholders reviewing contracts independently</div>
+        <div class="mm-track"><div class="mm-fill fill-gold" data-width="100"></div></div>
+      </div>
+      <div class="mm-card">
+        <div class="mm-card-top">
+          <div class="mm-card-label">SLA Adherence Gain</div>
+          <div class="mm-badge mb-forest">Dashboard</div>
+        </div>
+        <div class="mm-num mn-forest" data-target="30" data-suffix="%">0%</div>
+        <div class="mm-desc">fewer SLA breaches via real-time predictive monitoring</div>
+        <div class="mm-track"><div class="mm-fill fill-forest" data-width="30"></div></div>
+      </div>
+      <div class="mm-card">
+        <div class="mm-card-top">
+          <div class="mm-card-label">Workflow Cycle Reduction</div>
+          <div class="mm-badge mb-navy">Predictive</div>
+        </div>
+        <div class="mm-num mn-navy" data-target="30" data-suffix="%">0%</div>
+        <div class="mm-desc">approval workflow speed improvement via parallel routing</div>
+        <div class="mm-track"><div class="mm-fill fill-navy" data-width="30"></div></div>
+      </div>
+      <div class="mm-card">
+        <div class="mm-card-top">
+          <div class="mm-card-label">Missed Clause Reduction</div>
+          <div class="mm-badge mb-rust">Risk AI</div>
+        </div>
+        <div class="mm-num mn-rust" data-target="90" data-suffix="%">0%</div>
+        <div class="mm-desc">high-risk clause detection accuracy vs. unassisted review</div>
+        <div class="mm-track"><div class="mm-fill fill-rust" data-width="90"></div></div>
+      </div>
+      <div class="mm-card">
+        <div class="mm-card-top">
+          <div class="mm-card-label">Audit Trail Coverage</div>
+          <div class="mm-badge mb-navy">Predictive</div>
+        </div>
+        <div class="mm-num mn-navy" data-target="99" data-suffix="%">0%</div>
+        <div class="mm-desc">complete governance record across all lifecycle stages</div>
+        <div class="mm-track"><div class="mm-fill fill-navy" data-width="99"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMBINED ENTERPRISE COUNTERS -->
+  <div class="counter-row">
+    <div class="counter-card cc-rust">
+      <div class="cc-num" data-target="5" data-suffix="s">0s</div>
+      <div class="cc-label">Contract Scan Speed</div>
+      <div class="cc-sub">full risk analysis</div>
+    </div>
+    <div class="counter-card cc-gold">
+      <div class="cc-num" data-target="40" data-suffix="%">0%</div>
+      <div class="cc-label">Faster Approvals</div>
+      <div class="cc-sub">AI summarization impact</div>
+    </div>
+    <div class="counter-card cc-forest">
+      <div class="cc-num" data-target="75" data-suffix="%">0%</div>
+      <div class="cc-label">Reporting Time Saved</div>
+      <div class="cc-sub">dashboard auto-generation</div>
+    </div>
+    <div class="counter-card cc-navy">
+      <div class="cc-num" data-target="2" data-suffix=" day">0 day</div>
+      <div class="cc-label">Delay Prediction Window</div>
+      <div class="cc-sub">proactive AI alerting</div>
+    </div>
+    <div class="counter-card" style="background:var(--ink);border-bottom:3px solid var(--ink-muted)">
+      <div class="cc-num" style="color:#FFFDF9" data-target="60" data-suffix="%">0%</div>
+      <div class="cc-label" style="color:rgba(255,255,255,0.5)">Overall Manual Effort</div>
+      <div class="cc-sub" style="color:rgba(255,255,255,0.3)">reduced across all processes</div>
+    </div>
+  </div>
+</section>
+<section class="finale" id="finale">
+  <div class="finale-hd">
+    <div class="ol">Final Business Value</div>
+    <h2>Four Use Cases.<br><em>One Intelligent Ecosystem.</em></h2>
+  </div>
+
+  <div class="four-p">
+    <div class="pillar"><div class="p-bg">01</div><div class="p-acc pa-rust"></div><h3>AI Risk Analysis</h3><p>Clause detection, risk scoring, and template comparison — reducing legal exposure and accelerating validation.</p></div>
+    <div class="pillar"><div class="p-bg">02</div><div class="p-acc pa-gold"></div><h3>AI Summarization</h3><p>Plain-language summaries enabling 3× more stakeholders to review independently, cutting approval time by 40%.</p></div>
+    <div class="pillar"><div class="p-bg">03</div><div class="p-acc pa-forest"></div><h3>AI Dynamic Dashboard</h3><p>Real-time, role-based KPI dashboards with predictive analytics and personalized saved views for every user.</p></div>
+    <div class="pillar"><div class="p-bg">04</div><div class="p-acc pa-navy"></div><h3>AI Predictive Workflow</h3><p>Proactive bottleneck detection, delay prediction, and approval optimisation before issues escalate.</p></div>
+  </div>
+
+  <div class="formula-banner">
+    <p class="fb-sub">Together, these four capabilities create a fully intelligent,<br>self-improving Contract Lifecycle Management ecosystem.</p>
+    <div class="fr">
+      <div class="ft ft-rust">Efficiency</div><span class="fs">+</span>
+      <div class="ft ft-gold">Compliance</div><span class="fs">+</span>
+      <div class="ft ft-forest">Strategic Intelligence</div><span class="fs">+</span>
+      <div class="ft ft-navy">Reduced Manual Effort</div><span class="fs">=</span>
+      <div class="ft ft-res">AI-Powered CLM Ecosystem</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="fi">
+    <div class="f-logo">Contract AI Intelligence</div>
+    <div class="f-note">Deck Analysis — AI-Driven Contract &amp; Approval Intelligence</div>
+  </div>
+</footer>
+
+<script>
+const io = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible'); }), {threshold:0.07});
+document.querySelectorAll('.chapter,.finale').forEach(el => io.observe(el));
+function jmp(id){ const el=document.querySelector(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
+
+/* ── ANIMATE COUNTERS ── */
+function animateCounter(el) {
+  const target = parseFloat(el.dataset.target);
+  const suffix = el.dataset.suffix || '';
+  const isDecimal = target % 1 !== 0;
+  const duration = 1600;
+  const start = performance.now();
+  function tick(now) {
+    const elapsed = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - elapsed, 3);
+    const val = target * ease;
+    el.textContent = (isDecimal ? val.toFixed(1) : Math.round(val)) + suffix;
+    if (elapsed < 1) requestAnimationFrame(tick);
+    else el.textContent = (Number.isInteger(target) ? target : target.toFixed(1)) + suffix;
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ── ANIMATE KPI BARS ── */
+function animateBars(container) {
+  container.querySelectorAll('.kpi-fill, .mm-fill').forEach(fill => {
+    const w = fill.dataset.width;
+    if (w) fill.style.width = w + '%';
+  });
+}
+
+/* ── INTERSECTION OBSERVER FOR METRICS ── */
+const metricObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const root = entry.target;
+    root.querySelectorAll('[data-target]').forEach(el => {
+      if (!el.dataset.animated) {
+        el.dataset.animated = '1';
+        animateCounter(el);
+      }
+    });
+    animateBars(root);
+    metricObs.unobserve(root);
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.counter-row, .metrics-section, .master-metrics, .stat-strip').forEach(el => {
+  metricObs.observe(el);
+});
+
+/* Trigger stat-strip numbers too */
+const statObs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.querySelectorAll('.stat-num').forEach(el => {
+      if (!el.dataset.animated) {
+        el.dataset.animated = '1';
+      }
+    });
+  });
+}, { threshold: 0.2 });
+document.querySelectorAll('.stat-strip').forEach(el => statObs.observe(el));
+</script>
+</body>
+</html>
